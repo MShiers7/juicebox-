@@ -186,9 +186,7 @@ async function getPostsByUser(userId) {
 }
 
 async function createTags(tagList) {
-  if (tagList.length === 0) {
-    return [];
-  }
+  if (tagList.length === 0) return [];
 
   // need something like: $1), ($2), ($3
   const insertValues = tagList.map((_, index) => `$${index + 1}`).join("), (");
@@ -321,6 +319,19 @@ async function getPostsByTagName(tagName) {
   }
 }
 
+const getAllTags = async () => {
+  try {
+    const { rows } = await client.query(`
+      SELECT * 
+      FROM tags;
+    `);
+
+    return { rows };
+  } catch (error) {
+    throw error;
+  }
+};
+
 // and export them
 module.exports = {
   client,
@@ -336,4 +347,5 @@ module.exports = {
   createPostTag,
   addTagsToPost,
   getPostsByTagName,
+  getAllTags,
 };
