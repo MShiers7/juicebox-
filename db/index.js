@@ -1,7 +1,14 @@
 const { Client } = require("pg");
 const { rows } = require("pg/lib/defaults");
+const { DATABASE_URL = "postgres://localhost:5432/juicebox-dev" } = process.env;
 
-const client = new Client("postgres://localhost:5432/juicebox-dev");
+const client = new Client({
+  connectionString: DATABASE_URL,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : undefined,
+});
 
 async function getAllUsers() {
   const { rows } = await client.query(
